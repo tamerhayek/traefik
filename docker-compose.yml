@@ -50,7 +50,6 @@ services:
 
             # Default resolver for TLS routers on websecure
             - '--entrypoints.websecure.http.tls.certresolver=le'
-
         labels:
             - 'traefik.enable=true'
 
@@ -65,6 +64,10 @@ services:
             - 'traefik.http.middlewares.dashboard-auth.basicauth.users=tamerhayek:$$apr1$$TnaeRtrr$$RR3ku5NtHe8SmZukk8cJx/'
             - 'traefik.http.routers.dashboard.middlewares=dashboard-auth@docker'
 
+            # Middleware redirect: www -> non-www
+            - 'traefik.http.middlewares.redirect-www-to-non-www.redirectregex.regex=^https?://www\.(.+)'
+            - 'traefik.http.middlewares.redirect-www-to-non-www.redirectregex.replacement=https://$${1}'
+            - 'traefik.http.middlewares.redirect-www-to-non-www.redirectregex.permanent=true'
 networks:
     proxy:
         name: proxy
